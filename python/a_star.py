@@ -5,13 +5,13 @@ class Map(object):
             self.x = x
             self.y = y
 
+        def __eq__(self, coordinate):
+            return self.x == coordinate.x and self.y == coordinate.y
+
     class Item(Coordinate):
         def __init__(self, x, y, passability):
             self.coordinate = Map.Coordinate(x, y)
             self.passability = passability
-
-        def __eq__(self, coordinate):
-            return self.coordinate.x == coordinate.x and self.coordinate.y == coordinate.y
 
     def __init__(self):
         passabilities = [
@@ -44,14 +44,14 @@ class Map(object):
             if result:
                 result += '\n'
             for item in line:
-                if coordinate_from == item:
+                if coordinate_from == item.coordinate:
                     result += ' OO'
-                elif coordinate_to == item:
+                elif coordinate_to == item.coordinate:
                     result += ' XX'
                 else:
                     path_item_found = None
                     for path_item in path:
-                        if path_item == item:
+                        if path_item == item.coordinate:
                             path_item_found = path_item
                             
                     if path_item_found:
