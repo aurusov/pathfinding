@@ -20,14 +20,14 @@ class Map(object):
         passabilities = [
             [1,  1,  1,  1,  1,  1,  1,  1,  1,  1],
             [1, -1, -1, -1, -1, -1, -1, -1, -1,  1],
-            [1,  1,  1,  1,  1,  1,  1,  1, -1,  1],
-            [1,  1,  1,  1,  1,  1,  1,  1, -1,  1],
-            [1,  1,  1,  1,  1,  1,  1,  1, -1,  1],
-            [1,  1,  1,  1,  1,  1,  1,  1,  1,  1],
-            [1,  1,  1,  1,  1,  1,  1,  1,  1,  1],
-            [1,  1,  1,  1,  1,  1,  1,  1,  1,  1],
-            [1,  1,  1,  1,  1,  1,  1,  1,  1,  1],
-            [1,  1,  1,  1,  1,  1,  1,  1,  1,  1],
+            [1,  1,  1, -1,  1,  1,  1,  1, -1,  1],
+            [1,  1,  1, -1,  1,  1,  1,  1, -1,  1],
+            [1,  1,  1, -1,  1,  1,  1,  1, -1,  1],
+            [1,  1,  1, -1,  1,  1,  1,  1,  1,  1],
+            [1,  1,  1, -1,  1,  1,  1,  1,  1,  1],
+            [1,  1,  1, -1,  1,  1,  1,  1,  1,  1],
+            [1,  1,  1, -1,  1,  1,  1,  1,  1,  1],
+            [1,  1,  1, -1,  1,  1,  1,  1,  1,  1],
         ]
 
         self.__map__ = []
@@ -141,7 +141,7 @@ class Map(object):
 
                 child_from_open_set = None
                 for node_from_open_set in open_set:
-                    if node_from_open_set == child:
+                    if node_from_open_set.map_item.coordinate == child.map_item.coordinate:
                         child_from_open_set = node_from_open_set
                         break
                 if child_from_open_set:
@@ -155,6 +155,6 @@ class Map(object):
 
 map = Map()
 coordinate_from = Map.Coordinate(2, 3)
-coordinate_to = Map.Coordinate(9, 1)
+coordinate_to = Map.Coordinate(4, 3)
 path = map.calcPath(coordinate_from, coordinate_to)
 print map.get_str(coordinate_from, coordinate_to, path)
