@@ -141,7 +141,7 @@ class Map(object):
 
                 child_from_open_set = None
                 for node_from_open_set in open_set:
-                    if node_from_open_set == child:
+                    if node_from_open_set.map_item.coordinate == child.map_item.coordinate:
                         child_from_open_set = node_from_open_set
                         break
                 if child_from_open_set:
