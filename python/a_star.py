@@ -22,10 +22,10 @@ class Map(object):
             [1, -1, -1, -1, -1, -1, -1, -1, -1,  1],
             [1,  1,  1, -1,  1,  1,  1,  1, -1,  1],
             [1,  1,  1, -1,  1,  1,  1,  1, -1,  1],
-            [1,  1,  1, -1,  1,  1,  1,  1, -1,  1],
-            [1,  1,  1, -1,  1,  1,  1,  1,  1,  1],
-            [1,  1,  1, -1,  1,  1,  1,  1,  1,  1],
-            [1,  1,  1, -1,  1,  1,  1,  1,  1,  1],
+            [1,  1,  1, -1,  2,  2,  2,  3, -1,  1],
+            [1,  1,  1, -1,  2,  2,  3,  4,  5,  1],
+            [1,  1,  1, -1,  1,  1,  1,  1,  3,  1],
+            [1,  1,  1, -1,  1,  1,  1,  1,  2,  1],
             [1,  1,  1, -1,  1,  1,  1,  1,  1,  1],
             [1,  1,  1, -1,  1,  1,  1,  1,  1,  1],
         ]
@@ -77,9 +77,6 @@ class Map(object):
             self.g = 0.0
             self.h = 0.0
             self.child = []
-
-        def __str__(self):
-            return '(%1d,%1d)[%2d]: %f=%f+%f' % (self.map_item.coordinate.x, self.map_item.coordinate.y, self.map_item.passability, self.f, self.h, self.h)
 
         def generateChildren(self, map):
             children = []
