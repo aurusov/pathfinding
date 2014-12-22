@@ -155,6 +155,6 @@ class Map(object):
 
 map = Map()
 coordinate_from = Map.Coordinate(2, 3)
-coordinate_to = Map.Coordinate(4, 3)
+coordinate_to = Map.Coordinate(9, 1)
 path = map.calcPath(coordinate_from, coordinate_to)
 print map.get_str(coordinate_from, coordinate_to, path)
