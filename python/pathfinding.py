@@ -1,4 +1,4 @@
-class Coordinate(object):
+class Coordinate:
     def __init__(coordinate, x, y):
         coordinate.x = x
         coordinate.y = y
@@ -9,7 +9,8 @@ class Coordinate(object):
     def getLength(point1, point2):
         return abs(point1.x - point2.x) + abs(point1.y - point2.y)
 
-class Area(object):
+
+class Area:
     def __init__(area):
         area.passabilities = [
             [1,  1,  1,  1,  1,  1,  1,  1,  1,  1],
@@ -63,7 +64,9 @@ class Area(object):
 
         return result
 
-    class Node(object):
+
+class PathFinding:
+    class Node:
         def __init__(node, parent, coordinate):
             node.parent = parent
             node.coordinate = coordinate
@@ -96,11 +99,12 @@ class Area(object):
             if area.getPassability(coordinate) == -1:
                 return None
 
-            return Area.Node(node, coordinate)
+            return PathFinding.Node(node, coordinate)
 
+    @staticmethod
     def getPath(area, coordinate_from, coordinate_to):
 
-        root = Area.Node(None, coordinate_from)
+        root = PathFinding.Node(None, coordinate_from)
         root.g = 0.0
         root.h = root.coordinate.getLength(coordinate_to)
         root.f = root.g + root.h
@@ -150,5 +154,5 @@ class Area(object):
 area = Area()
 coordinate_from = Coordinate(2, 3)
 coordinate_to = Coordinate(9, 1)
-path = area.getPath(coordinate_from, coordinate_to)
+path = PathFinding.getPath(area, coordinate_from, coordinate_to)
 print area.toString(coordinate_from, coordinate_to, path)
