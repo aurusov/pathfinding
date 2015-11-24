@@ -5,11 +5,11 @@ class Map(object):
             self.x = x
             self.y = y
 
-        def __eq__(self, coordinate):
-            return self.x == coordinate.x and self.y == coordinate.y
+        def __eq__(point1, point2):
+            return point1.x == point2.x and point1.y == point2.y
 
-        def getLength(self, coordinate):
-            return abs(self.x - coordinate.x) + abs(self.y - coordinate.y)
+        def getLength(point1, point2):
+            return abs(point1.x - point2.x) + abs(point1.y - point2.y)
 
     class Item(Coordinate):
         def __init__(self, x, y, passability):
@@ -20,14 +20,14 @@ class Map(object):
         passabilities = [
             [1,  1,  1,  1,  1,  1,  1,  1,  1,  1],
             [1, -1, -1, -1, -1, -1, -1, -1, -1,  1],
-            [1,  1,  1, -1,  1,  1,  1,  1, -1,  1],
-            [1,  1,  1, -1,  1,  1,  1,  1, -1,  1],
-            [1,  1,  1, -1,  2,  2,  2,  3, -1,  1],
-            [1,  1,  1, -1,  2,  2,  3,  4,  5,  1],
-            [1,  1,  1, -1,  1,  1,  1,  1,  3,  1],
-            [1,  1,  1, -1,  1,  1,  1,  1,  2,  1],
-            [1,  1,  1, -1,  1,  1,  1,  1,  1,  1],
-            [1,  1,  1, -1,  1,  1,  1,  1,  1,  1],
+            [1,  1,  1,  1,  1,  1,  1,  1, -1,  1],
+            [1,  1,  1,  1,  1,  1,  1,  1, -1,  1],
+            [1,  1,  1,  1,  1,  1,  1,  1, -1,  1],
+            [1,  1,  1,  1,  1,  1,  1,  1,  1,  1],
+            [1,  1,  1,  1,  1,  1,  1,  1,  1,  1],
+            [1,  1,  1,  1,  1,  1,  1,  1,  1,  1],
+            [1,  1,  1,  1,  1,  1,  1,  1,  1,  1],
+            [1,  1,  1,  1,  1,  1,  1,  1,  1,  1],
         ]
 
         self.__map__ = []
@@ -58,7 +58,8 @@ class Map(object):
                     for path_item in path:
                         if path_item == item.coordinate:
                             path_item_found = path_item
-                            
+                            break
+
                     if path_item_found:
                         result += '  *'
                     elif item.passability == -1:
@@ -70,42 +71,41 @@ class Map(object):
         return result
 
     class Node(object):
-        def __init__(self, parent, map_item):
+        def __init__(self, parent, coordinate):
             self.parent = parent
-            self.map_item = map_item
+            self.coordinate = coordinate
             self.f = 0.0
             self.g = 0.0
             self.h = 0.0
-            self.child = []
 
-        def generateChildren(self, map):
+        def __eq__(node1, node2):
+            return node1.coordinate == node2.coordinate
+
+        def generateChildren(node, map):
             children = []
-            if self.map_item.coordinate.x + 1 < map.widht:
-                item = map.__map__[self.map_item.coordinate.y][self.map_item.coordinate.x+1]
+            if node.coordinate.x + 1 < map.widht:
+                item = map.__map__[node.coordinate.y][node.coordinate.x+1]
                 if item.passability != -1:
-                    children.append(Map.Node(self, item))
-            if self.map_item.coordinate.x > 0:
-                item = map.__map__[self.map_item.coordinate.y][self.map_item.coordinate.x-1]
+                    children.append(Map.Node(node, item.coordinate))
+            if node.coordinate.x > 0:
+                item = map.__map__[node.coordinate.y][node.coordinate.x-1]
                 if item.passability != -1:
-                    children.append(Map.Node(self, item))
-            if self.map_item.coordinate.y + 1 < map.heidth:
-                item = map.__map__[self.map_item.coordinate.y+1][self.map_item.coordinate.x]
+                    children.append(Map.Node(node, item.coordinate))
+            if node.coordinate.y + 1 < map.heidth:
+                item = map.__map__[node.coordinate.y+1][node.coordinate.x]
                 if item.passability != -1:
-                    children.append(Map.Node(self, item))
-            if self.map_item.coordinate.y > 0:
-                item = map.__map__[self.map_item.coordinate.y-1][self.map_item.coordinate.x]
+                    children.append(Map.Node(node, item.coordinate))
+            if node.coordinate.y > 0:
+                item = map.__map__[node.coordinate.y-1][node.coordinate.x]
                 if item.passability != -1:
-                    children.append(Map.Node(self, item))
+                    children.append(Map.Node(node, item.coordinate))
             return children
 
     def calcPath(self, coordinate_from, coordinate_to):
 
-        item_from = self.__map__[coordinate_from.y][coordinate_from.x]
-        item_to = self.__map__[coordinate_to.y][coordinate_to.x]
-
-        root = Map.Node(None, item_from)
+        root = Map.Node(None, coordinate_from)
         root.g = 0.0
-        root.h = root.map_item.coordinate.getLength(coordinate_to)
+        root.h = root.coordinate.getLength(coordinate_to)
         root.f = root.g + root.h
 
         open_set = []
@@ -116,11 +116,11 @@ class Map(object):
             open_set.sort(key=lambda node: node.f)
             best_node = open_set[0]
 
-            if best_node.map_item.coordinate == coordinate_to:
-                path = [best_node.map_item.coordinate]
+            if best_node.coordinate == coordinate_to:
+                path = []
                 node = best_node
-                while node.parent:
-                    path = [node.parent.map_item.coordinate] + path
+                while node:
+                    path.insert(0, node.coordinate)
                     node = node.parent
                 return path
 
@@ -132,13 +132,13 @@ class Map(object):
                 if child in closed_set:
                     continue
 
-                child.g = best_node.g + child.map_item.passability
-                child.h = child.map_item.coordinate.getLength(coordinate_to)
+                child.g = best_node.g + self.__map__[child.coordinate.y][child.coordinate.x].passability
+                child.h = child.coordinate.getLength(coordinate_to)
                 child.f = child.g + child.h
 
                 child_from_open_set = None
                 for node_from_open_set in open_set:
-                    if node_from_open_set.map_item.coordinate == child.map_item.coordinate:
+                    if node_from_open_set == child:
                         child_from_open_set = node_from_open_set
                         break
                 if child_from_open_set:
@@ -152,6 +152,6 @@ class Map(object):
 
 map = Map()
 coordinate_from = Map.Coordinate(2, 3)
-coordinate_to = Map.Coordinate(4, 3)
+coordinate_to = Map.Coordinate(9, 1)
 path = map.calcPath(coordinate_from, coordinate_to)
 print map.get_str(coordinate_from, coordinate_to, path)
